@@ -18,6 +18,12 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Print Workspace') {
+            steps {
+                sh 'ls -la $WORKSPACE'
+            }
+        }
+        
         stage('Terraform init') {
             steps {
                 // Change directory to the Terraform working directory
