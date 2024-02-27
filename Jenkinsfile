@@ -23,7 +23,7 @@ pipeline {
                 // Change directory to the Terraform working directory
                 dir("${env.TF_PATH}") {
                     // Initialize Terraform
-                    sh 'sudo terraform init'
+                    sh 'terraform init'
                 }
             }
         }
@@ -32,7 +32,7 @@ pipeline {
                 // Change directory to the Terraform working directory
                 dir("${env.TF_PATH}") {
                     // Apply Terraform changes
-                    sh 'sudo terraform apply --auto-approve'
+                    sh 'terraform apply --auto-approve'
                 }
             }
         }
