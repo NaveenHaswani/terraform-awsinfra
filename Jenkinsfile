@@ -4,15 +4,11 @@ pipeline {
     environment {
         // Define the path where files will be cloned
         TF_PATH = "${WORKSPACE}/terraform" // Defaulting to a 'terraform' directory in the workspace
-        // Define the Terraform installation directory
-        TERRAFORM_HOME = tool 'terraform'
-        // Add Terraform binary to PATH
-        PATH = "${env.TERRAFORM_HOME}:${env.PATH}"
     }
 
     tools {
         // Define the Terraform tool installation
-        tool 'terraform', 'Terraform'
+        terraform 'Terraform'
     }
 
     stages {
