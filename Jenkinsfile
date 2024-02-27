@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Define the path where files will be cloned
-        TF_PATH = "${WORKSPACE}/terraform" // Defaulting to a 'terraform' directory in the workspace
+        TF_PATH = "${WORKSPACE}" // Defaulting to a 'terraform' directory in the workspace
     }
 
     tools {
