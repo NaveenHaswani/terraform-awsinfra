@@ -25,11 +25,10 @@ private_route_table_name = "Ninja-vpc-rt-private"
 
 rt_cidr = "0.0.0.0/0"
 
-instance_type = "t2.large"
+instance_type = "t3.medium"
 
 key_pair_name = "MH-01"
 
 public_instance_name = "PublicEC2-Ninja"
 
 private_instance_name = "PrivateEC2-Ninja"
-
