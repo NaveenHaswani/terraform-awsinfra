@@ -1,12 +1,7 @@
 pipeline {
     agent any
 
-    environment {
-        // Define the path where files will be cloned
-        TF_PATH = "${WORKSPACE}" // Defaulting to a 'terraform' directory in the workspace
-    }
-
-    tools {
+      tools {
         // Define the Terraform tool installation
         terraform 'Terraform'
     }
@@ -17,29 +12,18 @@ pipeline {
                 // Checkout source code from SCM
                 checkout scm
             }
-        }
-        stage('Print Workspace') {
-            steps {
-                sh 'ls -la $WORKSPACE'
-            }
-        }
-        
+        }        
         stage('Terraform init') {
             steps {
-                // Change directory to the Terraform working directory
-                dir("${env.TF_PATH}") {
-                    // Initialize Terraform
+                  // Initialize Terraform
                     sh 'terraform init'
-                }
             }
         }
         stage('Terraform apply') {
             steps {
-                // Change directory to the Terraform working directory
-                dir("${env.TF_PATH}") {
-                    // Apply Terraform changes
+              {
+                 // Apply Terraform changes
                     sh 'terraform apply --auto-approve'
-                }
             }
         }
     }
