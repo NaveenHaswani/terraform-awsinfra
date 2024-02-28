@@ -1,7 +1,15 @@
 pipeline {
     agent any
 
-      tools {
+    parameters {
+        choice(
+            choices: ['Apply Infrastructure', 'Destroy Infrastructure'], 
+            description: 'Select whether to apply or destroy the infrastructure:',
+            name: 'ACTION'
+        )
+    }
+
+    tools {
         // Define the Terraform tool installation
         terraform 'Terraform'
     }
@@ -13,17 +21,28 @@ pipeline {
     }
 
     stages {
-              
         stage('Terraform init') {
             steps {
-                  // Initialize Terraform
-                    sh 'terraform init'
+                // Initialize Terraform
+                sh 'terraform init'
             }
         }
-        stage('Terraform apply') {
-            steps {            
-                 // Apply Terraform changes
-                    sh 'terraform apply --auto-approve'
+        stage('Terraform Action') {
+            steps {
+                script {
+                    def action = params.ACTION
+
+                    switch (action) {
+                        case 'Apply Infrastructure':
+                            sh 'terraform apply --auto-approve'
+                            break
+                        case 'Destroy Infrastructure':
+                            sh 'terraform destroy --auto-approve'
+                            break
+                        default:
+                            echo "Invalid action selected"
+                    }
+                }
             }
         }
     }
