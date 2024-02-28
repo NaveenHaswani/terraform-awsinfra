@@ -6,13 +6,19 @@ pipeline {
         terraform 'Terraform'
     }
 
+    environment {
+        // Define environment variables to store AWS credentials
+        AWS_ACCESS_KEY_ID     = credentials('Naveenhaswani_aws')
+        AWS_SECRET_ACCESS_KEY = credentials('Naveenhaswani_aws')
+    }
+
     stages {
-        stage('Checkout') {
-            steps {
-                // Checkout source code from SCM
-                checkout scm
-            }
-        }        
+        // stage('Checkout') {
+        //     steps {
+        //         // Checkout source code from SCM
+        //         checkout scm
+        //     }
+        // }        
         stage('Terraform init') {
             steps {
                   // Initialize Terraform
