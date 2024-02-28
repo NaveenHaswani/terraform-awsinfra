@@ -13,12 +13,7 @@ pipeline {
     }
 
     stages {
-        // stage('Checkout') {
-        //     steps {
-        //         // Checkout source code from SCM
-        //         checkout scm
-        //     }
-        // }        
+              
         stage('Terraform init') {
             steps {
                   // Initialize Terraform
