@@ -25,7 +25,7 @@ private_route_table_name = "Ninja-vpc-rt-private"
 
 rt_cidr = "0.0.0.0/0"
 
-instance_type = "t2.medium"
+instance_type = "t2.large"
 
 key_pair_name = "MH-01"
 
