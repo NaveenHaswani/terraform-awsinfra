@@ -27,6 +27,36 @@ pipeline {
                 sh 'terraform init'
             }
         }
+        stage('Terraform Plan') {
+            steps {
+                // Plan Terraform
+                sh 'terraform plan'
+            }
+        }
+        stage('Terraform Plan') {
+            steps {
+                // Generate Terraform plan and store the output in a file
+                sh 'terraform plan -out=tfplan.out'
+            }
+        }
+
+        stage('View Terraform Plan') {
+            steps {
+                // Cat the Terraform plan file to view it
+                sh 'cat tfplan.out'
+            }
+        }
+
+        stage('Proceed with Apply') {
+            input {
+                message "Do you want to apply this Terraform plan?"
+                ok "Yes"
+            }
+            steps {
+                // Apply Terraform changes using the generated plan
+                sh 'terraform apply tfplan.out'
+            }
+        }        
         stage('Terraform Action') {
             steps {
                 script {
