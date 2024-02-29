@@ -30,7 +30,7 @@ pipeline {
         stage('Terraform Plan') {
             steps {
                 // Generate Terraform plan and store the output in a file
-                sh 'terraform plan -out=tfplan.out'
+                sh 'terraform plan -out=tfplan.out -json'
             }
         }
 
