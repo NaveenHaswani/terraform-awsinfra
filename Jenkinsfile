@@ -29,15 +29,16 @@ pipeline {
         }
         stage('Terraform Plan') {
             steps {
-                // Generate Terraform plan and store the output in a file
-                sh 'terraform plan -out=tfplan.out -json'
-            }
-        }
-
-        stage('View Terraform Plan') {
-            steps {
-                // Cat the Terraform plan file to view it
-                sh 'cat tfplan.out'
+                script {
+                    // Generate Terraform plan in JSON format
+                    def planJson = sh(script: 'terraform plan -out=tfplan.out -json', returnStdout: true).trim()
+                    
+                    // Pretty print the JSON
+                    def prettyPrintedPlan = sh(script: 'echo \'${planJson}\' | jq \'.\'', returnStdout: true).trim()
+                    
+                    // Print the pretty printed plan
+                    echo prettyPrintedPlan
+                }
             }
         }
 
