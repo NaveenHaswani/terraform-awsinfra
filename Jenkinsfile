@@ -33,8 +33,8 @@ pipeline {
                     // Generate Terraform plan in JSON format
                     def planJson = sh(script: 'terraform plan -out=tfplan.out -json', returnStdout: true).trim()
                     
-                    // Pretty print the JSON
-                    def prettyPrintedPlan = sh(script: 'echo \'${planJson}\' | jq \'.\'', returnStdout: true).trim()
+                    // Pretty print the JSON using Groovy
+                    def prettyPrintedPlan = new groovy.json.JsonBuilder().prettyPrint(planJson)
                     
                     // Print the pretty printed plan
                     echo prettyPrintedPlan
