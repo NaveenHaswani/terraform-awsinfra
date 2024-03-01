@@ -20,7 +20,7 @@ public-sg-protocol = "-1"
 
 ## Private SG
 pvt-sg-name = "private-sg1"
-pvt-sg-ports = [22, 80, 443, 8080]
+pvt-sg-ports = [22, 80, 443, 9000]
 pvt_cidr_blocks = ["0.0.0.0/0"]
 
 # Other Configuration
@@ -43,11 +43,11 @@ private-instance-name = ["private-instance-01", "private-instance-02"]
 
 ## Target tg
 target_group_name = "Sonar-tg"
-target_group_port = "8080"
+target_group_port = "9000"
 target_group_protocol = "HTTP"
 health_check_path = "/"
 health_check_protocol = "HTTP"
-health_check_port = "8080"
+health_check_port = "9000"
 health_check_interval = "5"
 health_check_timeout = "2"
 health_check_healthy_threshold = "2"
