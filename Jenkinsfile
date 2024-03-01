@@ -33,7 +33,7 @@ pipeline {
         }
             }
 
-        stage('Proceed with Apply') {
+        stage('Proceed with Terraform action') {
             input {
                 message "Do you want to apply this Terraform plan?"
                 ok "Yes"
