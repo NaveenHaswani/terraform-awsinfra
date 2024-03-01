@@ -29,17 +29,7 @@ pipeline {
         }
         stage('Terraform Plan') {
             steps {
-                script {
-                    // Generate Terraform plan in JSON format
-                    def planJson = sh(script: 'terraform plan -out=tfplan.out -json', returnStdout: true).trim()
-                    
-                    // Pretty print the JSON using Groovy
-                    def prettyPrintedPlan = new groovy.json.JsonBuilder().prettyPrint(planJson)
-                    
-                    // Print the pretty printed plan
-                    echo prettyPrintedPlan
-                }
-            }
+                    sh 'terraform plan -out myplan'
         }
 
         stage('Proceed with Apply') {
