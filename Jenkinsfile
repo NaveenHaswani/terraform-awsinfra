@@ -50,9 +50,9 @@ pipeline {
         stage('Apply / Destroy') {
             steps {
                     script {
-                        if (params.action == 'apply') {
+                        if (params.ACTION == 'apply') {
                             sh 'terraform apply -auto-approve'
-                        } else if (params.action == 'destroy') {
+                        } else if (params.ACTION == 'destroy') {
                             input message: 'Do you want to destroy the infrastructure?',
                                   parameters: [booleanParam(name: 'confirm', defaultValue: false, description: 'Confirm destroy')]
                             sh 'terraform destroy -auto-approve'
