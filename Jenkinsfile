@@ -31,6 +31,7 @@ pipeline {
             steps {
                     sh 'terraform plan -out myplan'
         }
+            }
 
         stage('Proceed with Apply') {
             input {
