@@ -37,7 +37,7 @@ new_vpc_cidr_block = "172.18.0.0/16"
 
 ami-id = "ami-03bb6d83c60fc5f7c"
 instance-type = "t2.medium"
-key-name = "MH-01.pem"
+key-name = "MH-01"
 bastion-instance-name = "bastion"
 private-instance-name = ["private-instance-01", "private-instance-02"]
 
