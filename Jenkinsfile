@@ -38,10 +38,10 @@ pipeline {
                 message "Do you want to apply this Terraform plan?"
                 ok "Yes"
             }
-            steps {
-                // Apply Terraform changes using the generated plan
-                sh 'terraform apply tfplan.out'
-            }
+            // steps {
+            //     // Apply Terraform changes using the generated plan
+            //     sh 'terraform apply tfplan.out'
+            // }
         }        
         stage('Terraform Action') {
             steps {
