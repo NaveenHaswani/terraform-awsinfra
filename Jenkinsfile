@@ -27,6 +27,19 @@ pipeline {
                 sh 'terraform init'
             }
         }
+        stage('Terraform Format') {
+            steps {                
+                    // Format Terraform configuration files
+                    sh 'terraform fmt'
+            }
+        }
+        
+       stage('Terraform Validate') {
+            steps {
+                   // Validate Terraform code
+                    sh 'terraform validate'
+            }
+        }
         stage('Terraform Plan') {
             steps {
                 sh 'terraform plan -out tfplan.out'
