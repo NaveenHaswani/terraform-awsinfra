@@ -1,90 +1,130 @@
-module "aws_vpc" {
-    source          = "./child_module/VPC"
-    vpc_cidr_block  = var.vpc_cidr
-    vpc_name        = var.name
+module "vpc" {
+  source = "./module/vpc"
+  vpc-cidr    = var.vpc-cidr
+  instance-tenancy = var.instance-tenancy
+  vpc-name = var.vpc-name
+}
+ module "public-subnets" {
+  source = "./module/public-subnets"
+  vpc_id = module.vpc.vpc_id
+  public-subnets-cidr = var.public-subnets-cidr
+  subnets-azs = var.subnets-azs
+  pub-sub-name = var.pub-sub-name
+ }
+
+ module "private-subnets" {
+  source = "./module/private-subnets"
+  vpc_id = module.vpc.vpc_id
+  private-subnets-cidr = var.private-subnets-cidr
+  subnets-azs = var.subnets-azs
+  pri-sub-name = var.pri-sub-name
+ }
+
+ module "eip" {
+  source = "./module/eip"
+  eip-domain = var.eip-domain
+ }
+ module "nat" {
+  source = "./module/nat"
+  elastic_ip_id = module.eip.elastic_ip_id
+  public_subnet_id = element(module.public-subnets.public_subnet_ids, 0)
+  nat_name = var.nat_name
+ }
+  module "igw" {
+  source = "./module/igw"
+  vpc_id = module.vpc.vpc_id
+  igw_name = var.igw_name
+ }
+  module "private-rt" {
+  source = "./module/private-rt"
+  vpc_id = module.vpc.vpc_id
+  private-rt-name = var.private-rt-name
+  destination-cidr = var.destination-cidr
+  nat-id = module.nat.nat_gateway_id
+  private_subnet_ids = module.private-subnets.private_subnet_ids
+  vpc_peering_connection_id = module.vpc_peering.peering_connection_id
+  existing_vpc_cidr_block = var.existing_vpc_cidr_block
+ }
+ module "public-rt" {
+  source = "./module/public-rt"
+  vpc_id = module.vpc.vpc_id
+  public-rt-name = var.public-rt-name
+  destination-cidr = var.destination-cidr
+  igw-id = module.igw.internet_gateway_id
+  public_subnet_ids = module.public-subnets.public_subnet_ids
+  vpc_peering_connection_id = module.vpc_peering.peering_connection_id
+  existing_vpc_cidr_block = var.existing_vpc_cidr_block
+  #new_vpc_route_table_id = module.public-subnets.public_subnet_ids
+  new_vpc_cidr_block = var.new_vpc_cidr_block
+  existing_vpc_route_table_id = var.existing_vpc_route_table_id
+
+ }
+module "public-sg" {
+  source       = "./module/public-sg"
+  vpc_id       = module.vpc.vpc_id
+  pub-sg-name  = var.pub-sg-name
+  pub-sg-ports = var.pub-sg-ports
+  cidr_blocks  = var.cidr_blocks
+  public-sg-protocol = var.public-sg-protocol
+  #public-sg-protocol = ["tcp"]
 }
 
-module "aws_public_subnet" {
-    source                    = "./child_module/Subnet/Public_subnet"
-    public_subnet_cidr_blocks = var.Public_subnet_cidr
-    public_subnet_name        = var.Public_subnet_name
-    id_vpc                    = module.aws_vpc.id_vpc
-    }
-
-module "aws_private_subnet" {
-    source                    = "./child_module/Subnet/Private_subnet"
-    private_subnet_cidr_blocks = var.Private_subnet_cidr
-    private_subnet_name       = var.Private_subnet_name
-    id_vpc                    = module.aws_vpc.id_vpc
-}
-
-module "aws_igw" {
-    source                    = "./child_module/IGW"
-    id_vpc                    = module.aws_vpc.id_vpc
-    igw_name                  = var.Name_igw
-}
-
-module "aws_eip" {
-    source                    = "./child_module/EIP"
-    eip_domain                = var.eip_domain_name
-}
-
-module "aws_nat" {
-    source                    = "./child_module/NAT"
-    allocation_id             = module.aws_eip.eip_ip
-    nat_public_subnet_id      = module.aws_public_subnet.public_subnet_ids[0]
-    nat_name                  = var.nat_gateway_name
-}
-
-module "aws_public_rt_table" {
-    source              = "./child_module/Route_table/Public_Route"
-    id_vpc              = module.aws_vpc.id_vpc
-    rt_cidr_block       = var.rt_cidr
-    aws_igw_id          = module.aws_igw.igw_id
-    public_rt_name     = var.public_route_table_name
-    aws_public_rt_id   = module.aws_public_rt_table.public_route_table_ids
-    aws_public_subnet_id   = module.aws_public_subnet.public_subnet_ids
-    public_subnet_cidr_blocks = var.Public_subnet_cidr
+module "private-sg" {
+  source           = "./module/private-sg"
+  vpc_id           = module.vpc.vpc_id
+  pvt-sg-name      = var.pvt-sg-name
+  pvt-sg-ports     = var.pvt-sg-ports
+  pvt_cidr_blocks = var.pvt_cidr_blocks
+  #private-sg-protocol = var.private-sg-protocol
+  private-sg-protocol = ["tcp"]
 
 }
 
-module "aws_private_rt_table" {
-    source              = "./child_module/Route_table/Private_Route"
-    id_vpc              = module.aws_vpc.id_vpc
-    rt_cidr_block       = var.rt_cidr
-    aws_nat_gateway_id  = module.aws_nat.nat_gateway_id
-    private_rt_name     = var.private_route_table_name
-    aws_private_rt_id   = module.aws_private_rt_table.private_route_table_ids
-    aws_private_subnet_id   = module.aws_private_subnet.private_subnet_ids
-    private_subnet_cidr_blocks = var.Private_subnet_cidr
+module "instances" {
+  source             = "./module/instances"
+  ami-id             = var.ami-id
+  instance-type      = var.instance-type
+  public_subnet_ids  = module.public-subnets.public_subnet_ids
+  private_subnet_ids = module.private-subnets.private_subnet_ids
+  bastion-instance-name = var.bastion-instance-name
+  private-instance-name = var.private-instance-name
+  key-name           = var.key-name
+  pub_sg_id          = module.public-sg.pub_sg_id  // Pass the output of public-sg module
+  pvt_sg_id          = module.private-sg.pvt_sg_id // Pass the output of private-sg module
 }
 
-module "aws_public_instance" {
-    source                    = "./child_module/EC2/Bastion_EC2"
-    aws_public_subnet_ids     = module.aws_public_subnet.public_subnet_ids
-    instance_type       = var.instance_type
-    key_pair_name       = var.key_pair_name
-    public_instance_name     = var.public_instance_name
-    ubuntu_ami       = data.aws_ami.ubuntu.id
 
+module "alb" {
+source = "./module/alb"
+alb_name = var.alb_name
+internal = var.internal
+security_groups = module.public-sg.pub_sg_id
+subnets = module.public-subnets.public_subnet_ids
+target_group_name = var.target_group_name
+target_group_port = var.target_group_port
+target_group_protocol = var.target_group_protocol
+vpc_id = module.vpc.vpc_id
+health_check_path = var.health_check_path
+health_check_protocol = var.health_check_protocol
+health_check_port = var.health_check_port
+health_check_interval = var.health_check_interval
+health_check_timeout = var.health_check_timeout
+health_check_healthy_threshold = var.health_check_healthy_threshold
+health_check_unhealthy_threshold = var.health_check_unhealthy_threshold
+listener_port = var.listener_port
+listener_protocol = var.listener_protocol
+private_instance_ids = module.instances.private_instance_ids
 }
 
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners = ["amazon"]
-
-  filter {
-   name = "name"
-   values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20230516"]
-  }
+module "vpc_peering" {
+  source = "./module/VPC-Peering"
+  // Input variables for the module
+  peer_owner_id                        = var.peer_owner_id
+  peer_vpc_id                          = var.peer_vpc_id
+  vpc_id                               = module.vpc.vpc_id
+  auto_accept                          = var.auto_accept
+  peering_tag                          = var.peering_tag
+  accepter_allow_remote_vpc_dns_resolution = var.accepter_allow_remote_vpc_dns_resolution
+  requester_allow_remote_vpc_dns_resolution = var.requester_allow_remote_vpc_dns_resolution
+  peering_connection_id                = module.vpc_peering.peering_connection_id
 }
-
-module "aws_private_instance" {
-    source                    = "./child_module/EC2/Private_EC2"
-    aws_private_subnet_ids    = module.aws_private_subnet.private_subnet_ids[*]
-    instance_type       = var.instance_type
-    key_pair_name       = var.key_pair_name
-    private_instance_name       = var.private_instance_name
-    ubuntu_ami      = data.aws_ami.ubuntu.id
-}
-

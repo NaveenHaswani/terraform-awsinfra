@@ -1,31 +1,56 @@
-output "vpc_id_root" {
-    value = module.aws_vpc.id_vpc
+output "elastic_ip_id" {
+  value = module.eip.elastic_ip_id
+}
+output "elastic_ip_public-ip" {
+  value = module.eip.elastic_ip_public-ip
+}
+output "internet_gateway_id" {
+  value = module.igw.internet_gateway_id
+}
+output "bastion_instance_public_ips" {
+   value = module.instances.bastion_instance_public_ips
 }
 
-output "public_subnet_id_root" {
-    value = module.aws_public_subnet.public_subnet_ids
+output "public_instance_ids" {
+   value = module.instances.public_instance_ids
 }
 
-output "private_subnet_id_root" {
-    value = module.aws_private_subnet.private_subnet_ids
+# output "private_instance_private_ips" {
+#    value = module.instances.private_instance_private_ips
+# }
+
+output "private_instance_ids" {
+   value = module.instances.private_instance_ids
 }
 
-output "igw_id" {
-    value = module.aws_igw.igw_id
+output "nat_gateway_id" {
+  value = module.nat.nat_gateway_id
+}
+output "public_rt_id" {
+   value = module.public-rt.public_rt_id
+}
+output "private_subnet_ids" {
+   value = module.private-subnets.private_subnet_ids
+}
+output "private_rt_id" {
+   value = module.private-rt.private_rt_id
+}
+output "public_subnet_ids" {
+   value = module.public-subnets.public_subnet_ids
+}
+output "vpc_id" {
+   value = module.vpc.vpc_id
 }
 
-output "eip_id" {
-    value = module.aws_eip.eip_ip
+output "public_sg_id" {
+  value = module.public-sg.pub_sg_id
 }
 
-output "nat_gw_id" {
-    value = module.aws_nat.nat_gateway_id
+output "private_sg_id" {
+  value = module.private-sg.pvt_sg_id
 }
 
-output "pub_route_table_ids" {
-    value = module.aws_public_rt_table.public_route_table_ids
-}
 
-output "priv_route_table_ids" {
-    value = module.aws_private_rt_table.private_route_table_ids
+output "peering_connection_id" {
+  value = module.vpc_peering.peering_connection_id
 }
