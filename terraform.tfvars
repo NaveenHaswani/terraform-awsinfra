@@ -35,7 +35,7 @@ existing_vpc_cidr_block = "172.31.0.0/16"
 existing_vpc_route_table_id = "rtb-066bc68f1b8661849"
 new_vpc_cidr_block = "172.18.0.0/16"
 
-ami-id = "ami-07b36ea9852e986ad"
+ami-id = "ami-03bb6d83c60fc5f7c"
 instance-type = "t2.medium"
 key-name = "MH-01.pem"
 bastion-instance-name = "bastion"
