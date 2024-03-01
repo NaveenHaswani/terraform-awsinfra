@@ -63,7 +63,7 @@ pipeline {
                 }
             }
         }
-
+}
         // stage('Proceed with Terraform action') {
         //     input {
         //         message "Do you want to apply this Terraform plan?"
