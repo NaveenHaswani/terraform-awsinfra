@@ -37,12 +37,12 @@ new_vpc_cidr_block = "172.18.0.0/16"
 
 ami-id = "ami-07b36ea9852e986ad"
 instance-type = "t2.medium"
-key-name = "tool-demo"
+key-name = "MH-01.pem"
 bastion-instance-name = "bastion"
 private-instance-name = ["private-instance-01", "private-instance-02"]
 
 ## Target tg
-target_group_name = "tomcat-tg"
+target_group_name = "Sonar-tg"
 target_group_port = "8080"
 target_group_protocol = "HTTP"
 health_check_path = "/"
@@ -58,14 +58,14 @@ listener_protocol = "HTTP"
 
 ## ALB
 
-alb_name = "tomcat-alb"
+alb_name = "Sonar-alb"
 internal = "false"
 
 
 ## vpc peering
 peer_vpc_id = "vpc-09a760a9657bbe867"
 peer_owner_id = "945711723952"
-peering_tag = "tomcat_vpc_peering"
+peering_tag = "Sonar_vpc_peering"
 auto_accept = true
 accepter_allow_remote_vpc_dns_resolution = true
 requester_allow_remote_vpc_dns_resolution = true
